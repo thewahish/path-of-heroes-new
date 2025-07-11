@@ -1,8 +1,8 @@
 // Game Configuration
 window.GameConfig = {
-    VERSION: 'V.3.0.0', // Updated version
+    VERSION: 'V.3.1.0', // Updated version
     DEBUG_MODE: true,
-    MAX_FLOORS: 10, // Demo scope
+    MAX_FLOORS: 10,
     SAVE_KEY: 'path_of_heroes_save',
     
     DIFFICULTIES: {
@@ -46,7 +46,7 @@ window.GameConfig = {
         { name: { en: "of Defense", ar: "الدفاع" }, statMod: { defense: 3 } }
     ],
 
-    // THIS OBJECT WAS LIKELY MISSING FROM YOUR FILE
+    // THIS OBJECT WAS MISSING FROM YOUR FILE, CAUSING THE CRASH
     CHARACTERS: {
         taha: {
             id: 'taha',
