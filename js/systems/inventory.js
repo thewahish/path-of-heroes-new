@@ -94,18 +94,11 @@ window.InventorySystem = class InventorySystem {
     }
     
     generateLootDrop(enemy, floor) {
-        // The check for dropChance has been removed to guarantee a 100% drop rate.
         const itemTypes = Object.keys(window.GameConfig.ITEM_TYPES);
-        const lootableItems = itemTypes.filter(type => {
-            const item = window.GameConfig.ITEM_TYPES[type];
-            return item.slot !== null || item.consumable;
-        });
-
-        if (lootableItems.length === 0) return null;
-
-        const randomItemType = lootableItems[Math.floor(Math.random() * lootableItems.length)];
+        const lootableItems = itemTypes.filter(type => window.GameConfig.ITEM_TYPES[type].slot !== null || window.GameConfig.ITEM_TYPES[type].consumable);
+        const itemType = lootableItems[Math.floor(Math.random() * lootableItems.length)];
         
-        return this.generateItem(randomItemType, floor);
+        return this.generateItem(itemType, floor);
     }
 
     useItem(item) {
