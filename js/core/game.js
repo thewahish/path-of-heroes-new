@@ -2,7 +2,6 @@
 window.PathOfHeroes = class PathOfHeroes {
     constructor() {
         this.initialized = false;
-        this.debugUpdateInterval = null;
         this.bindMethods();
     }
 
@@ -15,7 +14,6 @@ window.PathOfHeroes = class PathOfHeroes {
         this.showInventory = this.showInventory.bind(this);
         this.closeInventory = this.closeInventory.bind(this);
         this.setupCharacterScreen = this.setupCharacterScreen.bind(this);
-        // TYPO FIX: Changed from displayCharacterDetails to displayCharacterDetail
         this.displayCharacterDetail = this.displayCharacterDetail.bind(this);
         this.updateLanguageDisplay = this.updateLanguageDisplay.bind(this);
         this.updateBattleDisplay = this.updateBattleDisplay.bind(this);
@@ -128,11 +126,19 @@ window.PathOfHeroes = class PathOfHeroes {
         this.updateLanguageDisplay();
     }
     
+    // UPDATED with a safety check
     setupCharacterScreen() {
         const tabsContainer = document.getElementById('character-tabs');
         if (!tabsContainer) return;
         
         tabsContainer.innerHTML = '';
+
+        // --- SAFETY CHECK ADDED ---
+        if (!window.GameConfig || !window.GameConfig.CHARACTERS) {
+            console.error("CRITICAL ERROR: GameConfig.CHARACTERS is not defined. Check config.js.");
+            return; 
+        }
+        
         const characters = Object.values(window.GameConfig.CHARACTERS);
         const currentlySelected = this.state.current.selectedCharacter || characters[0]?.id;
 
@@ -156,7 +162,7 @@ window.PathOfHeroes = class PathOfHeroes {
         });
 
         this.state.current.selectedCharacter = characterId;
-        this.displayCharacterDetail(characterId); // Corrected function call
+        this.displayCharacterDetail(characterId);
 
         const startBtn = document.getElementById('start-game-btn');
         if (startBtn) {
@@ -164,7 +170,6 @@ window.PathOfHeroes = class PathOfHeroes {
         }
     }
 
-    // TYPO FIX: Function name is now singular
     displayCharacterDetail(characterId) {
         const card = document.getElementById('character-display-card');
         const characterData = window.GameConfig.CHARACTERS[characterId];
