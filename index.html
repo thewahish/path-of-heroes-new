@@ -16,7 +16,6 @@
 
 <body>
     <div id="game-wrapper">
-        <!-- Global Buttons -->
         <button id="lang-toggle-btn" class="global-btn" aria-label="Toggle Language">🌐</button>
         <button id="debug-open-btn" class="global-btn" aria-label="Open Debug Panel">🐛</button>
         
@@ -25,17 +24,8 @@
             <div id="debug-content"></div>
         </div>
 
-        <!-- Global HUD (Initially Hidden) -->
-        <div id="global-hud" class="hidden">
-            <div class="hud-group">
-                <div id="floor-name-display" class="gold-display">Area: Unknown</div>
-                <div id="battle-floor-display" class="gold-display">Floor: 1</div>
-                <div id="battle-gold-display" class="gold-display">💰 0</div>
-                <button id="battle-inventory-btn" class="global-btn" aria-label="Open Inventory">🎒</button>
-            </div>
-        </div>
+        <div id="global-hud" class="hidden"></div>
 
-        <!-- Screens -->
         <div id="loading-screen" class="screen">
             <h1 class="loading-title" data-i18n="game.title">Path of Heroes</h1>
             <p class="loading-text" data-i18n="loading.text">Loading...</p>
@@ -54,73 +44,41 @@
         </div>
 
         <div id="character-selection" class="screen hidden">
-            <div class="char-select-layout">
-                <h2 class="screen-title" data-i18n="character.select_title">Choose Your Hero</h2>
-                <div class="char-tabs" id="character-tabs"></div>
-                <div class="panel char-card" id="character-display-card"></div>
-                <div class="action-buttons">
-                    <button id="btn-char-back" class="action-btn" data-i18n="menu.back">Back</button>
-                    <button id="start-game-btn" class="action-btn primary" data-i18n="character.start_journey" disabled>Start Journey</button>
+            <h1 class="screen-title" data-i18n="character.select_title">Choose Your Hero</h1>
+            
+            <div class="char-tabs" id="character-tabs">
+                </div>
+
+            <div class="content-area" id="character-content-area">
+                </div>
+
+            <div class="action-buttons">
+                <button id="btn-char-back" class="btn back" data-i18n="menu.back">Back</button>
+                <button id="start-game-btn" class="btn start" data-i18n="character.start_journey" disabled>Start Journey</button>
+            </div>
+
+            <div class="modal-overlay" id="stats-modal-overlay">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3 class="modal-title" data-i18n="character.base_stats">Base Stats</h3>
+                        <button class="modal-close-btn" id="close-stats-modal">&times;</button>
+                    </div>
+                    <div class="stats-grid" id="modal-stats-grid">
+                        </div>
                 </div>
             </div>
         </div>
 
         <div id="battle-screen" class="screen hidden">
-            <div class="battle-background"></div>
-            <div class="battle-ui-grid">
-                <div class="combat-log" id="combat-log"><span id="combat-log-text"></span></div>
-                <div class="portraits-area">
-                    <div id="player-portrait" class="portrait player"></div>
-                    <div id="enemy-portrait" class="portrait enemy"></div>
-                </div>
-                <div class="info-panels-area">
-                    <div class="info-panel player-panel" id="player-info-panel"></div>
-                    <div class="info-panel enemy-panel" id="enemy-info-panel"></div>
-                </div>
-                <div class="action-buttons-bar">
-                    <button id="btn-attack" class="b-action-btn"><span>(A)</span><span data-i18n="battle.attack">Attack</span></button>
-                    <button id="btn-skill" class="b-action-btn"><span>(S)</span><span data-i18n="battle.skill">Skill</span></button>
-                    <button id="btn-item" class="b-action-btn"><span>(I)</span><span data-i18n="battle.item">Item</span></button>
-                    <button id="btn-defend" class="b-action-btn"><span>(D)</span><span data-i18n="battle.defend">Defend</span></button>
-                    <button id="btn-flee" class="b-action-btn"><span>(F)</span><span data-i18n="battle.flee">Flee</span></button>
-                </div>
             </div>
-        </div>
 
         <div id="inventory-screen" class="screen hidden">
-            <div class="inventory-header">
-                <h2 class="panel-title" data-i18n="inventory.title">Inventory</h2>
-                <button id="btn-inv-close" class="btn" data-i18n="menu.back">Back</button>
             </div>
-            <div class="inventory-container">
-                <div class="left-panel">
-                    <div class="panel">
-                        <h3 class="panel-title" data-i18n="inventory.equipment">Equipment</h3>
-                        <div class="equipment-grid" id="equipment-grid"></div>
-                    </div>
-                    <div class="panel char-stats-panel">
-                        <h3 class="panel-title" id="inventory-stats-title">Character Stats</h3>
-                        <table class="char-stats-table" id="inventory-stats-table"></table>
-                    </div>
-                </div>
-                <div class="right-panel">
-                    <div class="panel" style="flex-grow: 1;">
-                        <h3 class="panel-title" data-i18n="inventory.items">Items</h3>
-                        <div class="inventory-grid" id="inventory-grid"></div>
-                    </div>
-                    <div class="inventory-actions">
-                        <button id="btn-inv-sort" class="action-btn" data-i18n="inventory.sort">Sort</button>
-                        <button id="btn-inv-sell-common" class="action-btn" data-i18n="inventory.sell_common">Sell Common</button>
-                    </div>
-                </div>
-            </div>
-        </div>
 
         <div id="item-tooltip" class="item-tooltip hidden"></div>
         <div id="item-comparison-tooltip" class="item-comparison-tooltip hidden"></div>
     </div>
 
-    <!-- Script loading order is crucial -->
     <script src="js/core/config.js"></script>
     <script src="js/core/localization.js"></script>
     <script src="js/core/state.js"></script>
