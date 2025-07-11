@@ -1,0 +1,1 @@
+-e "# Ignore IDE and system files\n.vscode/\n.idea/\n*.log\nnode_modules/\n.DS_Store\n# Ignore sensitive files\nsecrets.json" 

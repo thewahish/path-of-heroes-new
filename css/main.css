@@ -1,0 +1,349 @@
+/* --- CSS Variables --- */
+:root {
+    --primary-color: #f1c40f;
+    --secondary-color: #3a2e22;
+    --background-color: #1a1a1a;
+    --text-color: #e0e0e0;
+    --border-color: #5a4b3a;
+    --panel-bg-color: rgba(30, 20, 10, 0.85);
+    --font-primary: 'Cinzel', serif;
+    --font-secondary: 'Noto Sans', sans-serif;
+    --font-arabic: 'Noto Sans Arabic', sans-serif;
+    --stat-increase: #2ecc71;
+    --stat-decrease: #e74c3c;
+    --debug-color: #2ecc71;
+}
+
+/* --- Base Styles --- */
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #111;
+    font-family: var(--font-secondary);
+    color: var(--text-color);
+    margin: 0;
+    padding: 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+[lang="ar"] {
+    font-family: var(--font-arabic);
+}
+
+.hidden {
+    display: none !important;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+}
+
+/* --- Global HUD --- */
+#global-hud {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 1rem 1.5rem;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    z-index: 100;
+}
+
+.hud-group {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.gold-display {
+    background-color: rgba(0, 0, 0, 0.6);
+    padding: 0.4rem 0.8rem;
+    border-radius: 15px;
+    border: 1px solid var(--border-color);
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+#battle-inventory-btn {
+    position: static;
+    background-color: rgba(0, 0, 0, 0.6);
+}
+
+/* --- Screen Layout --- */
+.screen {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1rem;
+    gap: 1.5rem;
+    text-align: center;
+}
+
+/* --- Global UI Styles --- */
+.global-btn {
+    background-color: rgba(0, 0, 0, 0.5);
+    border: 1px solid var(--border-color);
+    color: var(--text-color);
+    width: 2.8rem;
+    height: 2.8rem;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.5rem;
+    cursor: pointer;
+    z-index: 1000;
+    position: absolute;
+}
+
+.global-btn:hover {
+    background-color: var(--border-color);
+}
+
+#lang-toggle-btn {
+    top: 1rem;
+    left: 1rem;
+}
+
+#debug-open-btn {
+    bottom: 1rem;
+    left: 1rem;
+}
+
+.panel {
+    background: var(--secondary-color);
+    border-radius: 8px;
+    padding: 1rem;
+    border: 1px solid var(--border-color);
+}
+
+.panel-title {
+    font-family: var(--font-primary);
+    font-size: 1.2rem;
+    color: var(--primary-color);
+    margin: 0 0 1rem 0;
+}
+
+.action-btn {
+    background: var(--secondary-color);
+    border: 2px solid var(--border-color);
+    color: var(--text-color);
+    border-radius: 8px;
+    width: 130px;
+    padding: 0.6rem;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.action-btn:hover {
+    background-color: var(--border-color);
+}
+
+.action-btn.primary {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    color: #1a1a1a;
+}
+
+.action-btn.primary:hover {
+    background-color: #d4ac0d;
+}
+
+hr.divider {
+    width: 100%;
+    border: none;
+    border-top: 1px solid var(--border-color);
+    margin: 0.5rem 0 1rem 0;
+}
+
+/* --- Debug Panel --- */
+#debug-panel {
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+    z-index: 9998;
+    background-color: rgba(0, 0, 0, 0.8);
+    border: 2px solid var(--debug-color);
+    border-radius: 8px;
+    color: var(--debug-color);
+    padding: 1rem;
+    text-align: left;
+    font-family: monospace;
+    font-size: 0.8rem;
+    width: 250px;
+}
+
+#debug-toggle-btn {
+    position: absolute;
+    top: 0.25rem;
+    right: 0.5rem;
+    background: transparent;
+    border: none;
+    color: var(--debug-color);
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 0;
+    line-height: 1;
+}
+
+#debug-toggle-btn:hover {
+    opacity: 0.8;
+}
+
+#debug-content p {
+    margin: 0 0 0.4rem 0;
+}
+
+/* --- Main Menu --- */
+#main-menu {
+    justify-content: center;
+}
+
+#main-menu .game-title {
+    font-family: var(--font-primary);
+    font-size: 2.5rem;
+    color: var(--primary-color);
+}
+
+#main-menu .button-group {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    width: 80%;
+    max-width: 300px;
+}
+
+#main-menu .menu-btn {
+    height: 3.5rem;
+    font-size: 1.2rem;
+    width: 100%;
+}
+
+/* --- Character Selection --- */
+#character-selection {
+    justify-content: center;
+}
+
+.screen-title {
+    font-family: var(--font-primary);
+    font-size: 1.5rem;
+    color: var(--primary-color);
+}
+
+#character-selection .char-select-layout {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    width: 90%;
+    max-width: 400px;
+}
+
+#character-selection .char-tabs {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    direction: ltr;
+}
+
+#character-selection .tab-btn {
+    background: transparent;
+    border: 2px solid var(--border-color);
+    color: var(--text-color);
+    width: 6.5rem;
+    height: 2.5rem;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+#character-selection .tab-btn.active {
+    border-color: var(--primary-color);
+}
+
+#character-selection .char-card {
+    padding: 1.5rem;
+    text-align: center;
+}
+
+#character-selection .card-portrait {
+    font-size: 3rem;
+    margin-bottom: 0.5rem;
+}
+
+#character-selection .card-name {
+    font-family: var(--font-primary);
+    font-size: 2rem;
+}
+
+#character-selection .card-title {
+    color: var(--primary-color);
+    font-size: 0.9rem;
+    margin-top: 0.1rem;
+}
+
+#character-selection .card-desc {
+    font-size: 0.8rem;
+    min-height: 40px;
+    margin: 0.8rem 0;
+}
+
+#character-selection .card-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    text-align: left;
+}
+
+[dir="rtl"] #character-selection .card-stats {
+    text-align: right;
+}
+
+#character-selection .stat-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.9rem;
+}
+
+#character-selection .action-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+}
+
+/* --- Loading Screen --- */
+#loading-screen {
+    justify-content: center;
+}
+
+.loading-title {
+    font-family: var(--font-primary);
+    font-size: 3rem;
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+}
+
+.loading-progress-container {
+    width: 80%;
+    max-width: 400px;
+    height: 20px;
+    background-color: var(--secondary-color);
+    border: 2px solid var(--border-color);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.loading-progress {
+    width: 0%;
+    height: 100%;
+    background-color: var(--primary-color);
+    transition: width 0.2s ease-in-out;
+}

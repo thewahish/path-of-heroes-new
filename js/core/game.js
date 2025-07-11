@@ -1,0 +1,329 @@
+// Main Game Class
+window.PathOfHeroes = class PathOfHeroes {
+    constructor() {
+        this.initialized = false;
+        this.debugUpdateInterval = null;
+        this.bindMethods();
+    }
+
+    bindMethods() {
+        this.showMainMenu = this.showMainMenu.bind(this);
+        this.showCharacterSelect = this.showCharacterSelect.bind(this);
+        this.selectCharacter = this.selectCharacter.bind(this);
+        this.startGameRun = this.startGameRun.bind(this);
+        this.toggleLanguage = this.toggleLanguage.bind(this);
+        this.showInventory = this.showInventory.bind(this);
+        this.closeInventory = this.closeInventory.bind(this);
+        this.setupCharacterScreen = this.setupCharacterScreen.bind(this);
+        // TYPO FIX: Changed from displayCharacterDetails to displayCharacterDetail
+        this.displayCharacterDetail = this.displayCharacterDetail.bind(this);
+        this.updateLanguageDisplay = this.updateLanguageDisplay.bind(this);
+        this.updateBattleDisplay = this.updateBattleDisplay.bind(this);
+        this.updateBar = this.updateBar.bind(this);
+        this.updateElement = this.updateElement.bind(this);
+        this.handleKeyDown = this.handleKeyDown.bind(this);
+        this.defeat = this.defeat.bind(this);
+        this.victory = this.victory.bind(this);
+        this.enterBattle = this.enterBattle.bind(this);
+        this.showLoadGame = this.showLoadGame.bind(this);
+        this.showOptions = this.showOptions.bind(this);
+    }
+
+    async init() {
+        try {
+            this.initializeSystems();
+            this.setupEventListeners();
+            this.startLoadingSequence();
+            this.initialized = true;
+        } catch (error) {
+            console.error('Failed to create or initialize game instance:', error);
+            alert('A critical error occurred and the game cannot start. Please refresh the page.');
+            throw error;
+        }
+    }
+
+    initializeSystems() {
+        this.localization = window.Localization;
+        this.state = window.GameState;
+        this.combat = new window.CombatSystem(this);
+        this.inventory = new window.InventorySystem(this);
+        if (this.localization) this.localization.init();
+        if (this.inventory) this.inventory.init();
+    }
+
+    setupEventListeners() {
+        document.addEventListener('keydown', this.handleKeyDown);
+    }
+
+    handleKeyDown(event) {
+        if (this.state.current.currentScreen === 'battle-screen') {
+            switch(event.code) {
+                case 'KeyA': this.combat?.playerAttack(); break;
+                case 'KeyS': this.combat?.playerUseSkill(0); break;
+                case 'KeyD': this.combat?.playerDefend(); break;
+                case 'KeyF': this.combat?.playerFlee(); break;
+                case 'KeyI': this.combat?.playerUseItem(); break;
+            }
+        }
+        if (event.code === 'KeyI' && this.state.current.gameStarted) {
+            if (this.state.current.currentScreen !== 'battle-screen') {
+                 if (this.state.current.currentScreen === 'inventory-screen') {
+                    this.closeInventory();
+                } else {
+                    this.showInventory();
+                }
+            }
+        }
+    }
+
+    startLoadingSequence() {
+        let progress = 0;
+        const progressBar = document.getElementById('loading-progress');
+        
+        const interval = setInterval(() => {
+            progress += Math.random() * 20 + 5;
+            if (progress >= 100) {
+                progress = 100;
+                clearInterval(interval);
+                setTimeout(() => this.showMainMenu(), 500);
+            }
+            if (progressBar) progressBar.style.width = `${progress}%`;
+        }, 200);
+    }
+
+    showMainMenu() {
+        this.state.setScreen('main-menu');
+        this.updateLanguageDisplay();
+    }
+
+    showCharacterSelect() {
+        this.state.setScreen('character-selection');
+        this.updateLanguageDisplay();
+    }
+    
+    showLoadGame() { 
+        alert('Load game not implemented yet!'); 
+    }
+    
+    showOptions() { 
+        alert('Options not implemented yet!'); 
+    }
+
+    updateLanguageDisplay() {
+        if (!this.localization) return;
+        this.localization.updateAllText();
+        
+        if (this.state.current.currentScreen === 'character-selection') {
+            this.setupCharacterScreen();
+        }
+        if (this.state.current.currentScreen === 'inventory-screen') {
+            this.inventory.updateDisplay();
+        }
+    }
+
+    toggleLanguage() {
+        if (!this.localization) return;
+        const newLang = this.localization.getCurrentLanguage() === 'en' ? 'ar' : 'en';
+        this.localization.switchLanguage(newLang);
+        this.updateLanguageDisplay();
+    }
+    
+    setupCharacterScreen() {
+        const tabsContainer = document.getElementById('character-tabs');
+        if (!tabsContainer) return;
+        
+        tabsContainer.innerHTML = '';
+        const characters = Object.values(window.GameConfig.CHARACTERS);
+        const currentlySelected = this.state.current.selectedCharacter || characters[0]?.id;
+
+        characters.forEach(char => {
+            const tab = document.createElement('button');
+            tab.className = 'tab-btn';
+            tab.dataset.characterId = char.id;
+            tab.textContent = this.localization.getCharacterName(char);
+            tab.addEventListener('click', () => this.selectCharacter(char.id));
+            tabsContainer.appendChild(tab);
+        });
+
+        if (currentlySelected) {
+            this.selectCharacter(currentlySelected);
+        }
+    }
+    
+    selectCharacter(characterId) {
+        document.querySelectorAll('#character-tabs .tab-btn').forEach(tab => {
+            tab.classList.toggle('active', tab.dataset.characterId === characterId);
+        });
+
+        this.state.current.selectedCharacter = characterId;
+        this.displayCharacterDetail(characterId); // Corrected function call
+
+        const startBtn = document.getElementById('start-game-btn');
+        if (startBtn) {
+            startBtn.disabled = false;
+        }
+    }
+
+    // TYPO FIX: Function name is now singular
+    displayCharacterDetail(characterId) {
+        const card = document.getElementById('character-display-card');
+        const characterData = window.GameConfig.CHARACTERS[characterId];
+        if (!card || !characterData) {
+            if(card) card.innerHTML = '';
+            return;
+        }
+        
+        const lang = this.localization.getCurrentLanguage();
+
+        const statsHtml = Object.keys(characterData.stats)
+            .filter(stat => stat !== 'maxHp')
+            .map(stat => {
+                let locKey;
+                switch(stat) {
+                    case 'attack': locKey = 'atk'; break;
+                    case 'defense': locKey = 'def'; break;
+                    case 'speed': locKey = 'spd'; break;
+                    default: locKey = stat;
+                }
+
+                const label = this.localization.getText(`stat.${locKey}`);
+                let value = characterData.stats[stat];
+                if (stat === 'hp') value = characterData.stats.maxHp;
+                if (stat === 'crit') value = `${value}%`;
+
+                return `<div class="stat-row">
+                        <span class="stat-label">${label}</span>
+                        <span class="stat-value">${value}</span>
+                    </div>`;
+            }).join('');
+
+        card.innerHTML = `<div class="card-portrait">${characterData.sprite}</div>
+            <h2 class="card-name">${this.localization.getCharacterName(characterData)}</h2>
+            <p class="card-title">${characterData.title[lang]}</p>
+            <p class="card-description">${characterData.description[lang]}</p>
+            <hr class="divider">
+            <div class="card-stats">${statsHtml}</div>`;
+    }
+
+    startGameRun() {
+        if (!this.state.current.selectedCharacter) return;
+        try {
+            this.state.newGame(this.state.current.selectedCharacter);
+            this.enterBattle();
+        } catch (error) {
+            console.error('Failed to start game:', error);
+            alert('Failed to start game. Please try again.');
+        }
+    }
+
+    enterBattle() {
+        const enemies = this.generateEnemiesForFloor();
+        this.state.startBattle(enemies);
+        this.state.setScreen('battle-screen');
+        this.combat.startBattle(enemies);
+    }
+    
+    updateBattleDisplay() {
+        // This function will be updated later to match the new battle screen design
+    }
+
+    updateBar(barId, current, max) {
+        const bar = document.getElementById(barId);
+        if (bar) {
+            const percentage = (max > 0) ? (current / max) * 100 : 0;
+            bar.style.width = `${Math.max(0, Math.min(100, percentage))}%`;
+        }
+    }
+
+    updateElement(id, value) {
+        const element = document.getElementById(id);
+        if (element) {
+            element.textContent = value;
+        }
+    }
+    
+    showInventory() {
+        if (!this.state.current.gameStarted) {
+            alert('Start a game first!');
+            return;
+        }
+        this.state.setScreen('inventory-screen');
+        this.inventory.updateDisplay();
+    }
+    
+    closeInventory() {
+        if (this.state.current.battleInProgress) {
+            this.state.setScreen('battle-screen');
+        } else {
+            this.showMainMenu();
+        }
+    }
+
+    generateEnemiesForFloor() {
+        const floor = this.state.current.currentFloor;
+        const enemyTypes = Object.keys(window.GameConfig.ENEMIES);
+        const enemyType = enemyTypes[Math.floor(Math.random() * enemyTypes.length)];
+        return [this.createEnemyFromTemplate(enemyType, floor)];
+    }
+
+    createEnemyFromTemplate(enemyType, floor) {
+        const template = window.GameConfig.ENEMIES[enemyType];
+        if (!template) return null;
+        const scaling = 1 + (floor - 1) * 0.15;
+        return {
+            id: `${enemyType}_${Date.now()}`,
+            type: enemyType, name: template.name, sprite: template.sprite, level: floor,
+            stats: {
+                hp: Math.floor(template.baseStats.hp * scaling),
+                maxHp: Math.floor(template.baseStats.hp * scaling),
+                attack: Math.floor(template.baseStats.attack * scaling),
+                defense: Math.floor(template.baseStats.defense * scaling),
+                speed: Math.floor(template.baseStats.speed * scaling),
+                crit: template.baseStats.crit
+            },
+            abilities: template.abilities || [], statusEffects: [],
+            xpReward: Math.floor(template.xpReward * scaling),
+            goldReward: Math.floor(template.goldReward * scaling),
+        };
+    }
+    
+    victory() {
+        const enemies = this.state.current.enemies;
+        let totalXP = 0;
+        let totalGold = 0;
+        
+        enemies.forEach(enemy => {
+            totalXP += enemy.xpReward || 0;
+            totalGold += enemy.goldReward || 0;
+        });
+        
+        const difficulty = window.GameConfig.DIFFICULTIES[this.state.current.difficulty];
+        totalXP = Math.floor(totalXP * difficulty.xpMult);
+        totalGold = Math.floor(totalGold * difficulty.goldMult);
+        
+        this.state.addExperience(totalXP);
+        this.state.addGold(totalGold);
+        this.state.endBattle(true);
+        
+        if (this.state.current.currentFloor >= window.GameConfig.MAX_FLOORS) {
+            alert(`🎉 Congratulations! You've completed the demo!`);
+            this.showMainMenu();
+            return;
+        }
+        
+        this.state.current.currentFloor++;
+        const continueToNext = confirm(`Victory! Gained ${totalXP} XP and ${totalGold} gold!\n\nContinue to Floor ${this.state.current.currentFloor}?`);
+        
+        if (continueToNext) {
+            this.enterBattle();
+        } else {
+            this.showMainMenu();
+        }
+    }
+
+    defeat() {
+        this.state.endBattle(false);
+        alert('Game Over! You have been defeated!');
+        this.showMainMenu();
+    }
+};
