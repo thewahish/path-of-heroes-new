@@ -15,7 +15,7 @@ window.PathOfHeroes = class PathOfHeroes {
         this.showInventory = this.showInventory.bind(this);
         this.closeInventory = this.closeInventory.bind(this);
         this.setupCharacterScreen = this.setupCharacterScreen.bind(this);
-        this.displayCharacterDetail = this.displayCharacterDetail.bind(this);
+        this.displayCharacterDetails = this.displayCharacterDetails.bind(this);
         this.updateLanguageDisplay = this.updateLanguageDisplay.bind(this);
         this.updateBattleDisplay = this.updateBattleDisplay.bind(this);
         this.updateBar = this.updateBar.bind(this);
@@ -155,7 +155,7 @@ window.PathOfHeroes = class PathOfHeroes {
         });
 
         this.state.current.selectedCharacter = characterId;
-        this.displayCharacterDetail(characterId);
+        this.displayCharacterDetails(characterId);
 
         const startBtn = document.getElementById('start-game-btn');
         if (startBtn) {
@@ -163,7 +163,7 @@ window.PathOfHeroes = class PathOfHeroes {
         }
     }
 
-    displayCharacterDetail(characterId) {
+    displayCharacterDetails(characterId) {
         const card = document.getElementById('character-display-card');
         const characterData = window.GameConfig.CHARACTERS[characterId];
         if (!card || !characterData) {

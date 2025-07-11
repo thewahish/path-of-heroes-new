@@ -98,7 +98,7 @@ window.InventorySystem = class InventorySystem {
         const lootableItems = itemTypes.filter(type => window.GameConfig.ITEM_TYPES[type].slot !== null || window.GameConfig.ITEM_TYPES[type].consumable);
         const itemType = lootableItems[Math.floor(Math.random() * lootableItems.length)];
         
-        return this.generateItem(itemType, floor);
+        return this.generateItem(randomItemType, floor);
     }
 
     useItem(item) {
