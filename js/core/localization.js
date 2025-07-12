@@ -1,3 +1,4 @@
+// js/core/localization.js
 // Localization System
 window.Localization = {
     currentLanguage: 'en',
@@ -15,6 +16,7 @@ window.Localization = {
         "menu.back": { en: "Back", ar: "العودة" },
         "character.select_title": { en: "Choose Your Hero", ar: "اختر بطلك" },
         "character.start_journey": { en: "Start Journey", ar: "ابدأ الرحلة" },
+        "character.base_stats": { en: "Base Stats", ar: "الإحصائيات الأساسية" }, // <-- ADDED THIS LINE
         "hud.floor": { en: "Floor", ar: "الطابق" },
         "hud.gold": { en: "Gold", ar: "ذهب" },
         "hud.level": { en: "Level", ar: "المستوى" },

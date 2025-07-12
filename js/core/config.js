@@ -1,3 +1,4 @@
+// js/core/config.js
 // Game Configuration
 window.GameConfig = {
     VERSION: 'V.3.1.0', // Updated version
@@ -45,19 +46,22 @@ window.GameConfig = {
         { name: { en: "of Power", ar: "القوة" }, statMod: { attack: 3 } },
         { name: { en: "of Defense", ar: "الدفاع" }, statMod: { defense: 3 } }
     ],
-
-    // THIS OBJECT WAS MISSING FROM YOUR FILE, CAUSING THE CRASH
+    
     CHARACTERS: {
         taha: {
             id: 'taha',
             name: { en: "Taha", ar: "طه" },
             title: { en: "Steel Knight", ar: "الفارس الفولاذي" },
             description: { en: "A stalwart defender with unmatched courage.", ar: "مدافع صامد بشجاعة لا تُضاهى." },
-            sprite: '⚔️',
+            sprite: '🛡️',
             stats: { hp: 120, maxHp: 120, attack: 15, defense: 12, speed: 8, crit: 10 },
             resource: { type: "vigor", name: { en: "Vigor", ar: "قوة" }, current: 25, max: 25, regen: 2 },
             abilities: ["heavy_strike"],
-            growthRates: { hp: 8, attack: 2, defense: 2, speed: 1, crit: 1 }
+            growthRates: { hp: 8, attack: 2, defense: 2, speed: 1, crit: 1 },
+            strengths: {
+                s1: { en: "High Defense", ar: "دفاع عالي" },
+                s2: { en: "High Health", ar: "صحة عالية" }
+            }
         },
         mais: {
             id: 'mais',
@@ -68,7 +72,11 @@ window.GameConfig = {
             stats: { hp: 80, maxHp: 80, attack: 20, defense: 8, speed: 12, crit: 15 },
             resource: { type: "mana", name: { en: "Mana", ar: "سحر" }, current: 30, max: 30, regen: 3 },
             abilities: ["fireball"],
-            growthRates: { hp: 5, attack: 3, defense: 1, speed: 2, crit: 2 }
+            growthRates: { hp: 5, attack: 3, defense: 1, speed: 2, crit: 2 },
+            strengths: {
+                s1: { en: "Elemental Mastery", ar: "إتقان العناصر" },
+                s2: { en: "Crowd Control", ar: "السيطرة على الحشود" }
+            }
         },
         ibrahim: {
             id: 'ibrahim',
@@ -79,7 +87,11 @@ window.GameConfig = {
             stats: { hp: 100, maxHp: 100, attack: 18, defense: 10, speed: 15, crit: 20 },
             resource: { type: "energy", name: { en: "Energy", ar: "طاقة" }, current: 20, max: 20, regen: 4 },
             abilities: ["quick_strike"],
-            growthRates: { hp: 6, attack: 2.5, defense: 1.5, speed: 2, crit: 2.5 }
+            growthRates: { hp: 6, attack: 2.5, defense: 1.5, speed: 2, crit: 2.5 },
+            strengths: {
+                s1: { en: "High Speed", ar: "سرعة عالية" },
+                s2: { en: "High Crit", ar: "ضربة حاسمة عالية" }
+            }
         }
     },
 
