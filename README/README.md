@@ -1,10 +1,10 @@
-Path of Heroes – Master README (v36.3)
+Path of Heroes – Master README (v36.5)
 
 Last Updated: July 11, 2025
 
 GitHub Repository: https://github.com/thewahish/path-of-heroes-new
 
-Current Status: In progress (~75% complete). Game engine loads with some console warnings (e.g., missing elements now fixed; battle screen visibility improved). Debugger panel active but formatting refined; battle state shows in debugger but screen may require explicit toggle. Added full debug.js implementation for assessment. Enforcing new scope/rules: Demo limited to 10 floors (1 biome), boss at Floor 10; full game expands to 60 floors (6 biomes). All code/files must adhere to these updates—override any outdated references (e.g., 20-floor demo, 5-floor bosses/biomes).
+Current Status: In progress (~75% complete). Game engine loads with some console warnings (e.g., missing elements now fixed; battle screen visibility improved). Debugger panel active but formatting refined; battle state shows in debugger but screen may require explicit toggle. Added full debug.js implementation for assessment. Enforcing new scope/rules: Demo limited to 10 floors (1 biome, boss at 10); full game 60 floors (6 biomes). All code/files must adhere to these updates—override any outdated references (e.g., 20-floor demo, 5-floor bosses/biomes).
 
 📘 Project Purpose & Master Record
 
@@ -151,8 +151,8 @@ Wrap
 Run
 
 Copy
+// js/debug.js
 // Full implementation based on project specs  
-const KONAMI_CODE = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'KeyB', 'KeyA'];  
 
 window.Debugger = class Debugger {  
     constructor(gameInstance) {  
@@ -161,7 +161,6 @@ window.Debugger = class Debugger {
         this.content = document.getElementById('debug-content');  
         this.openBtn = document.getElementById('debug-open-btn');  
         this.toggleBtn = document.getElementById('debug-toggle-btn');  
-        this.konamiIndex = 0;  
         this.updateInterval = null;  
     }  
 
@@ -171,9 +170,6 @@ window.Debugger = class Debugger {
         // Attach button listeners  
         this.openBtn.addEventListener('click', () => this.togglePanel());  
         this.toggleBtn.addEventListener('click', () => this.togglePanel());  
-
-        // Konami code listener  
-        document.addEventListener('keydown', (e) => this.checkKonami(e.key));  
 
         // Initial update  
         this.updateDebugInfo();  
@@ -185,18 +181,6 @@ window.Debugger = class Debugger {
             this.startUpdates();  
         } else {  
             this.stopUpdates();  
-        }  
-    }  
-
-    checkKonami(key) {  
-        if (key === KONAMI_CODE[this.konamiIndex]) {  
-            this.konamiIndex++;  
-            if (this.konamiIndex === KONAMI_CODE.length) {  
-                this.togglePanel();  
-                this.konamiIndex = 0;  
-            }  
-        } else {  
-            this.konamiIndex = 0;  
         }  
     }  
 
@@ -272,10 +256,10 @@ Development Guidelines: Use blueprint files as guides. Update JS modules for sta
 
 AI Collaboration Rules:
 
-Jump Code Navigation System: In code responses, provide a File Index with unique Jump Codes (e.g., jump-V.X.X-1 for files, -C for commits). Use Ctrl+F to navigate.
+Jump Code Navigation System: In code responses, provide a File Index with unique Jump Codes (e.g., jump-V.X.X-1 for files, -C for commits). Use Ctrl+F to navigate. Additionally, at the top of each code block for a file, include a comment indicator like '// filename.js' to identify the file when copied standalone.
 Internal Testing & Simulation Rule: After generating code, perform a full internal simulation (trace execution as browser engine). Audit for truncation, syntax/logical errors, dependencies. Fix issues before delivery; report if user input needed.
 Mockup Rule for New Designs: When adding/updating designs (e.g., new HTML screens), first generate as standalone mockup HTML (testable with button logs like "Button press successful"). Avoid breaking current code; integrate only after mockup approval.
-Chat Management: If context grows heavy (e.g., >10k lines), suggest new chat. Consolidate README with all changes/commits as prompt starter.
+Chat Management: If context grows heavy (e.g., causing truncation or performance issues), suggest new chat. Additionally, if the user indicates the chat is getting heavy (even if not evident), prepare to move to another chat to avoid reinventing the wheel and missing directions/progress. Consolidate README with all changes/commits as prompt starter.
 Commit Message Rule: Format: Title (type(scope): subject), Body (explanation), Footer (Version: V.X.X.X).
 
 ✅ Log of Major Historical Updates
@@ -293,4 +277,6 @@ v35.5: Added Debugger System section.
 v36.0: Consolidated historical READMEs; integrated biomes/rarities from parallel docs.
 v36.1: Added Jump Code/Internal Testing/Mockup/Chat Management rules. Updated Character Selection blueprint (new layout: default view with strengths, stats toggle). Integrated v28 character details. Noted bugs/fixes in status.
 v36.2: Reconstructed full debug.js implementation for missing file. Updated architecture to include js/debug.js. Assessed progress: Core systems (loading, UI screens) functional; bugs like missing IDs fixed; debugger now fully coded for state display and updates.
-v36.3: (Current) Updated scope to 10-floor demo (1 biome, boss at 10); full game 60 floors (6 biomes). Removed dungeon map for random events. Changed boss/biome to every 10 floors, checkpoints every 5. Added randomized narratives/mob names. Updated death respawn (Floors 1,5). Removed Konami code from debugger (mobile-only). Added item level hover display. Updated progression (shrine random increases). Enforced rules override in old code. Adjusted orientation phrasing and inventory expand/minimize note. Updated biomes table with planned full game.
+v36.3: Updated scope to 10-floor demo (1 biome, boss at 10); full game 60 floors (6 biomes). Removed dungeon map for random events. Changed boss/biome to every 10 floors, checkpoints every 5. Added randomized narratives/mob names. Updated death respawn (Floors 1,5). Removed Konami code from debugger (mobile-only). Added item level hover display. Updated progression (shrine random increases). Enforced rules override in old code. Adjusted orientation phrasing and inventory expand/minimize note. Updated biomes table with planned full game.
+v36.4: Added file identifier comment rule to Jump Code system (e.g., '// filename.js' at top of code blocks for standalone copying).
+v36.5: (Current) Refined Chat Management rule to be qualitative (suggest on truncation/performance issues) and user-triggered (prepare new chat if user says it's heavy, regardless of assessment).
