@@ -1,9 +1,8 @@
+// js/debug.js
 // --- Debugger System ---
 window.Debugger = class Debugger {
     constructor(gameInstance) {
         this.game = gameInstance; // Reference to the main game object
-        this.konamiSequence = [];
-        this.konamiCode = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'KeyB', 'KeyA'];
         this.debugUpdateInterval = null;
         this.bindMethods();
     }
@@ -11,15 +10,11 @@ window.Debugger = class Debugger {
     bindMethods() {
         this.toggleDebugPanel = this.toggleDebugPanel.bind(this);
         this.updateDebugInfo = this.updateDebugInfo.bind(this);
-        this.handleKeyDown = this.handleKeyDown.bind(this);
     }
 
     init() {
         if (!window.GameConfig.DEBUG_MODE) return;
         
-        // Listen for keyboard events for Konami code
-        document.addEventListener('keydown', this.handleKeyDown);
-
         // Attach click listeners to the debugger UI elements
         const openBtn = document.getElementById('debug-open-btn');
         const closeBtn = document.getElementById('debug-toggle-btn');
@@ -29,17 +24,6 @@ window.Debugger = class Debugger {
         }
         if (closeBtn) {
             closeBtn.addEventListener('click', this.toggleDebugPanel);
-        }
-    }
-
-    handleKeyDown(event) {
-        this.konamiSequence.push(event.code);
-        if (this.konamiSequence.length > this.konamiCode.length) {
-            this.konamiSequence.shift();
-        }
-        if (JSON.stringify(this.konamiSequence) === JSON.stringify(this.konamiCode)) {
-            this.toggleDebugPanel();
-            this.konamiSequence = [];
         }
     }
 

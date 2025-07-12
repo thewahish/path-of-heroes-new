@@ -1,3 +1,4 @@
+// js/core/game.js
 // Main Game Class
 window.PathOfHeroes = class PathOfHeroes {
     constructor() {
@@ -26,6 +27,8 @@ window.PathOfHeroes = class PathOfHeroes {
         this.enterBattle = this.enterBattle.bind(this);
         this.showLoadGame = this.showLoadGame.bind(this);
         this.showOptions = this.showOptions.bind(this);
+        this.showStatsModal = this.showStatsModal.bind(this);
+        this.hideStatsModal = this.hideStatsModal.bind(this);
     }
 
     async init() {
@@ -164,43 +167,66 @@ window.PathOfHeroes = class PathOfHeroes {
     }
 
     displayCharacterDetails(characterId) {
-        const card = document.getElementById('character-display-card');
         const characterData = window.GameConfig.CHARACTERS[characterId];
-        if (!card || !characterData) {
-            if(card) card.innerHTML = '';
-            return;
-        }
-        
+        if (!characterData) return;
+
         const lang = this.localization.getCurrentLanguage();
 
-        const statsHtml = Object.keys(characterData.stats)
-            .filter(stat => stat !== 'maxHp')
-            .map(stat => {
-                let locKey;
-                switch(stat) {
-                    case 'attack': locKey = 'atk'; break;
-                    case 'defense': locKey = 'def'; break;
-                    case 'speed': locKey = 'spd'; break;
-                    default: locKey = stat;
-                }
+        // Update main info panel
+        this.updateElement('hero-portrait', characterData.sprite);
+        this.updateElement('hero-name', this.localization.getCharacterName(characterData));
+        this.updateElement('hero-title', characterData.title[lang]);
+        this.updateElement('hero-desc', characterData.description[lang]);
 
-                const label = this.localization.getText(`stat.${locKey}`);
-                let value = characterData.stats[stat];
-                if (stat === 'hp') value = characterData.stats.maxHp;
-                if (stat === 'crit') value = `${value}%`;
+        // Setup stats modal button
+        const statsBtn = document.getElementById('open-stats-modal');
+        if (statsBtn) {
+            statsBtn.onclick = () => this.showStatsModal(characterId);
+        }
 
-                return `<div class="stat-row">
-                        <span class="stat-label">${label}</span>
-                        <span class="stat-value">${value}</span>
-                    </div>`;
-            }).join('');
+        // Update core strengths (Example implementation)
+        const strengthsContainer = document.getElementById('core-strengths-list');
+        if (strengthsContainer) {
+            strengthsContainer.innerHTML = `
+                <div class="strength">
+                    <span class="strength-icon">🛡️</span>
+                    <span class="strength-text">${characterData.strengths.s1[lang]}</span>
+                </div>
+                <div class="strength">
+                    <span class="strength-icon">❤️</span>
+                    <span class="strength-text">${characterData.strengths.s2[lang]}</span>
+                </div>
+            `;
+        }
+    }
 
-        card.innerHTML = `<div class="card-portrait">${characterData.sprite}</div>
-            <h2 class="card-name">${this.localization.getCharacterName(characterData)}</h2>
-            <p class="card-title">${characterData.title[lang]}</p>
-            <p class="card-description">${characterData.description[lang]}</p>
-            <hr class="divider">
-            <div class="card-stats">${statsHtml}</div>`;
+    showStatsModal(characterId) {
+        const modal = document.getElementById('stats-modal-overlay');
+        const grid = document.getElementById('modal-stats-grid');
+        const characterData = window.GameConfig.CHARACTERS[characterId];
+        if (!modal || !grid || !characterData) return;
+
+        const lang = this.localization.getCurrentLanguage();
+        const stats = characterData.stats;
+
+        const statsHtml = `
+            <div class="stat-item"><span>${this.localization.getText('stat.hp')}</span><span>${stats.maxHp}</span></div>
+            <div class="stat-item"><span>${this.localization.getText('stat.atk')}</span><span>${stats.attack}</span></div>
+            <div class="stat-item"><span>${this.localization.getText('stat.def')}</span><span>${stats.defense}</span></div>
+            <div class="stat-item"><span>${this.localization.getText('stat.spd')}</span><span>${stats.speed}</span></div>
+            <div class="stat-item"><span>${this.localization.getText('stat.crit')}</span><span>${stats.crit}%</span></div>
+            <div class="stat-item"><span>${characterData.resource.name[lang]}</span><span>${characterData.resource.max}</span></div>
+        `;
+        grid.innerHTML = statsHtml;
+        modal.classList.add('visible');
+    }
+
+    hideStatsModal(event) {
+        // Only hide if the overlay or close button itself is clicked
+        if (event.target.id === 'stats-modal-overlay' || event.target.id === 'close-stats-modal') {
+            const modal = document.getElementById('stats-modal-overlay');
+            if(modal) modal.classList.remove('visible');
+        }
     }
 
     startGameRun() {
@@ -222,7 +248,9 @@ window.PathOfHeroes = class PathOfHeroes {
     }
     
     updateBattleDisplay() {
-        // This function will be updated later to match the new battle screen design
+        // This function will be implemented later to match the new battle screen design
+        // For now, it remains a placeholder.
+        console.log("Placeholder: updateBattleDisplay called.");
     }
 
     updateBar(barId, current, max) {
@@ -253,6 +281,7 @@ window.PathOfHeroes = class PathOfHeroes {
         if (this.state.current.battleInProgress) {
             this.state.setScreen('battle-screen');
         } else {
+            // TODO: This should return to the previous non-inventory screen, not always main menu.
             this.showMainMenu();
         }
     }
@@ -322,6 +351,7 @@ window.PathOfHeroes = class PathOfHeroes {
     defeat() {
         this.state.endBattle(false);
         alert('Game Over! You have been defeated!');
+        // TODO: Implement proper Game Over screen and penalties per README
         this.showMainMenu();
     }
 };

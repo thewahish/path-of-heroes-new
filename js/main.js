@@ -1,3 +1,4 @@
+// js/main.js
 document.addEventListener('DOMContentLoaded', () => {
     // 1. Initialize the main game
     try {
@@ -54,7 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Stats Modal Listeners
     safeAddListener('close-stats-modal', 'click', gameAction((game, event) => game.hideStatsModal(event)));
     safeAddListener('stats-modal-overlay', 'click', gameAction((game, event) => game.hideStatsModal(event)));
-    // Note: The 'open-stats-modal' button is created dynamically in game.js, so we attach the listener there.
+    // Note: The 'open-stats-modal' button listener is attached dynamically in game.js.
 
     // --- Battle Screen ---
     safeAddListener('btn-attack', 'click', gameAction(game => game.combat.playerAttack()));
@@ -66,5 +67,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Inventory Screen ---
     safeAddListener('btn-inv-close', 'click', gameAction(game => game.closeInventory()));
     safeAddListener('btn-inv-sort', 'click', gameAction(game => game.inventory.sortItems()));
-    safeAddListener('btn-inv-sell-common', 'click', gameAction(game => game.inventory.sellAll('common')));
+    // FIX: The function is 'sellAllCommon' and takes no arguments.
+    safeAddListener('btn-inv-sell-common', 'click', gameAction(game => game.inventory.sellAllCommon()));
 });

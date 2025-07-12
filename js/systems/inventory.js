@@ -1,3 +1,4 @@
+// js/systems/inventory.js
 // Inventory System
 window.InventorySystem = class InventorySystem {
     constructor(game) {
@@ -5,7 +6,6 @@ window.InventorySystem = class InventorySystem {
         this.tooltip = null;
     }
 
-    // THIS FUNCTION WAS MISSING, CAUSING THE CRASH. IT IS NOW RESTORED.
     init() {
         this.tooltip = document.getElementById('item-tooltip');
         if (this.tooltip) {
@@ -98,7 +98,8 @@ window.InventorySystem = class InventorySystem {
         const lootableItems = itemTypes.filter(type => window.GameConfig.ITEM_TYPES[type].slot !== null || window.GameConfig.ITEM_TYPES[type].consumable);
         const itemType = lootableItems[Math.floor(Math.random() * lootableItems.length)];
         
-        return this.generateItem(randomItemType, floor);
+        // FIX: The variable was 'randomItemType' which is not defined. It should be 'itemType'.
+        return this.generateItem(itemType, floor);
     }
 
     useItem(item) {
